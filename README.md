@@ -1,5 +1,9 @@
 # Tollbooth
 
+[![Run tests](https://github.com/petlack/tollbooth/actions/workflows/run-tests.yml/badge.svg)](https://github.com/petlack/tollbooth/actions/workflows/run-tests.yml)
+[![CodeQL](https://github.com/petlack/tollbooth/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/petlack/tollbooth/actions/workflows/github-code-scanning/codeql)
+[![npm version](https://badge.fury.io/js/tollbooth.svg)](https://www.npmjs.com/package/tollbooth)
+
 Tollbooth is a small utility (10kB raw JS) for Node.js, Express & AWS Lambda that throttles and limits number of requests per client using Redis.
 
 - [Install](#install)
