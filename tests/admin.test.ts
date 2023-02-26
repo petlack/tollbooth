@@ -52,5 +52,7 @@ describe('admin tools', () => {
     await evict(redis);
 
     await expect(redis.keys('*')).resolves.toEqual(['foo']);
+
+    await redis.del('foo');
   });
 });
