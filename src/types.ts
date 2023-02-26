@@ -24,11 +24,7 @@ export type TollboothArgs = {
   throttleLimit?: number;
 };
 
-export type IndexedRoutes = {
-  [path: string]: {
-    [method: string]: boolean;
-  };
-};
+export type IndexedRoutes = Map<string, Map<string, boolean>>;
 
 export enum TollboothCode {
   TooManyRequests = -3,
