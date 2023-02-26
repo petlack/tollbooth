@@ -1,76 +1,7 @@
-import { getMessage } from './utils';
+import { codeToResponse, getCode, getMessage, indexRoutes, logEvent, noop } from './utils';
 
 import { TollboothCode } from './types';
-import type { IndexedRoutes, Route, ProtectArgs, TollboothArgs, ProtectResponse } from './types';
-
-function codeToName(code: TollboothCode): string {
-  const name = Object.keys(TollboothCode).find(
-    (key: string) => TollboothCode[key as keyof typeof TollboothCode] === code,
-  );
-  return name || 'Unknown';
-}
-
-function getCode(res: any): TollboothCode {
-  if (res == null) {
-    return TollboothCode.RedisError;
-  }
-  const num = parseInt(res);
-  if (num >= 0) {
-    return TollboothCode.Ok;
-  }
-  if (Object.values(TollboothCode).includes(num)) {
-    return num;
-  }
-  return TollboothCode.RedisError;
-}
-
-function codeToStatus(code: TollboothCode): number {
-  switch (code) {
-    case TollboothCode.TooManyRequests:
-      return 429;
-    case TollboothCode.Unauthorized:
-      return 401;
-    case TollboothCode.LimitReached:
-      return 429;
-    case TollboothCode.RedisError:
-      return 500;
-    case TollboothCode.Ok:
-      return 200;
-  }
-}
-
-function filterNil(obj: any): any {
-  return Object.entries(obj).reduce(
-    (res: any, [k, v]: [k: any, v: any]) => ({ ...res, ...(v == null ? {} : { [k]: v }) }),
-    {},
-  );
-}
-
-function codeToResponse(code: TollboothCode, info?: any): ProtectResponse {
-  return filterNil({ code, message: codeToName(code), statusCode: codeToStatus(code), info });
-}
-
-function indexRoutes(paths: Route[]): IndexedRoutes {
-  return paths.reduce((res: IndexedRoutes, { path, method }) => {
-    if (!res.has(path)) {
-      res.set(path, new Map());
-    }
-    res.get(path)?.set(method, true);
-    return res;
-  }, new Map());
-}
-
-function noop() {}
-type LogArgs = ProtectArgs & {
-  msg: string;
-};
-
-function logEvent({ method, path, token, msg }: LogArgs) {
-  console.log('= Tollbooth debug =');
-  console.log(`token=${token} method=${method} path=${path}`);
-  console.log(`${msg}`);
-  console.log('===================');
-}
+import type { ProtectArgs, TollboothArgs, ProtectResponse } from './types';
 
 const TOLLBOOTH_SCRIPT = `
   local limit_table = KEYS[1]
