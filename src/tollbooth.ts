@@ -52,12 +52,12 @@ function codeToResponse(code: TollboothCode, info?: any): ProtectResponse {
 
 function indexRoutes(paths: Route[]): IndexedRoutes {
   return paths.reduce((res: IndexedRoutes, { path, method }) => {
-    if (!res[path]) {
-      res[path] = {};
+    if (!res.has(path)) {
+      res.set(path, new Map());
     }
-    res[path][method] = true;
+    res.get(path)?.set(method, true);
     return res;
-  }, {});
+  }, new Map());
 }
 
 function noop() {}
@@ -129,7 +129,7 @@ export default function Tollbooth({
   const indexedRoutes = indexRoutes(routes);
   const protectingAll = !!routes.find(({ path }) => path === '*');
   const isProtected = (path: string, method: string) =>
-    indexedRoutes[protectingAll ? '*' : path] && indexedRoutes[protectingAll ? '*' : path][method];
+    indexedRoutes.get(protectingAll ? '*' : path)?.get(method);
 
   const log = debug ? logEvent : noop;
 
