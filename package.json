@@ -1,6 +1,6 @@
 {
   "name": "tollbooth",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Tollbooth is a small utility for Node.js, Express & AWS Lambda that throttles and limits number of requests per client using Redis.",
   "license": "MIT",
   "author": "petlack",
