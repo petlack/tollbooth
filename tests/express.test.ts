@@ -9,7 +9,7 @@ const redis = new Redis('redis://localhost:6379');
 
 afterAll(() => redis.quit());
 
-const systemKeys = ['_fact:limit'];
+const systemKeys = ['_tollbooth:limit'];
 
 function createApp({ clientHeaderName }: { clientHeaderName?: string } = {}) {
   const app = express();
@@ -96,7 +96,7 @@ describe('responses', () => {
     await request(app).get('/foo').set('x-api-key', 'ClientToken').expect(200, expected);
 
     const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_fact:throttle:ClientToken'].sort());
+    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:ClientToken'].sort());
   });
 
   test('GET 404 does not update keys', async () => {
@@ -115,7 +115,7 @@ describe('responses', () => {
   test('GET 429 too many requests when limit == hits', async () => {
     const expected = { data: null, errors: [{ message: 'LimitReached' }] };
 
-    await redis.hset('_fact:limit', 'ClientToken', 0);
+    await redis.hset('_tollbooth:limit', 'ClientToken', 0);
 
     await request(app).get('/foo').set('x-api-key', 'ClientToken').expect(429, expected);
   });

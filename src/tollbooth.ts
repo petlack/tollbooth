@@ -44,8 +44,8 @@ const TOLLBOOTH_SCRIPT = `
 `;
 
 const TOLLBOOTH_SCRIPT_KEYS = 2;
-const TOLLBOOTH_LIMIT_TABLE = '_fact:limit';
-const TOLLBOOTH_THROTTLE_TABLE = '_fact:throttle';
+const TOLLBOOTH_LIMIT_TABLE = '_tollbooth:limit';
+const TOLLBOOTH_THROTTLE_TABLE = '_tollbooth:throttle';
 
 export default function Tollbooth({
   redis,

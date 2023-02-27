@@ -71,7 +71,7 @@ const OK = {
   statusCode: 200,
 };
 
-const systemKeys = ['_fact:limit'];
+const systemKeys = ['_tollbooth:limit'];
 
 describe('unauthorized access', () => {
   afterEach(async () => {
@@ -107,7 +107,7 @@ describe('anonymous access', () => {
     await protectAnonymous(protectedRequest());
 
     const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_fact:throttle:anonymous'].sort());
+    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:anonymous'].sort());
   });
 });
 
@@ -128,7 +128,7 @@ describe('throttle', () => {
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(TOO_MANY_REQUESTS);
 
     const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_fact:throttle:ClientToken'].sort());
+    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:ClientToken'].sort());
   });
 
   test('unblocks after throttleInterval expired', async () => {
@@ -144,7 +144,7 @@ describe('throttle', () => {
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
-    const throttle = await redis.get('_fact:throttle:ClientToken');
+    const throttle = await redis.get('_tollbooth:throttle:ClientToken');
     expect(throttle).toBeNull();
 
     const keys = await redis.keys('*');
@@ -270,14 +270,14 @@ describe('update hits', () => {
     });
 
     const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_fact:throttle:ClientToken'].sort());
+    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:ClientToken'].sort());
   });
 
   test('protected path updates hits', async () => {
     await protect(protectedRequest('ClientToken'));
 
     const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_fact:throttle:ClientToken'].sort());
+    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:ClientToken'].sort());
   });
 
   test('unprotected path does not update hits', async () => {

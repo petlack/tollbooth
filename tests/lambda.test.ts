@@ -40,7 +40,7 @@ const protectedRequest = (
   ...(client ? { headers: { [clientHeaderName]: client } } : {}),
 });
 
-const systemKeys = ['_fact:limit'];
+const systemKeys = ['_tollbooth:limit'];
 
 describe('token', () => {
   beforeEach(async () => {
@@ -146,7 +146,7 @@ describe('responses', () => {
     await invokeLambda(protect(handler), protectedRequest('ClientToken'));
 
     const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_fact:throttle:ClientToken'].sort());
+    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:ClientToken'].sort());
   });
 
   test('401 unauthorized when missing token', async () => {
@@ -222,7 +222,7 @@ describe('responses', () => {
   test('GET 429 too many requests when limit == hits', async () => {
     const handler = okHandler({ status: 'ok' });
 
-    await redis.hset('_fact:limit', 'ClientToken', 0);
+    await redis.hset('_tollbooth:limit', 'ClientToken', 0);
 
     const stub = await invokeLambda(protect(handler), protectedRequest('ClientToken'));
 

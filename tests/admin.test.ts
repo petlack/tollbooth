@@ -17,9 +17,9 @@ describe('admin tools', () => {
       { token: 't3', limit: -2 },
     ]);
 
-    await expect(redis.hget('_fact:limit', 't1')).resolves.toEqual('11');
-    await expect(redis.hget('_fact:limit', 't2')).resolves.toEqual('0');
-    await expect(redis.hget('_fact:limit', 't3')).resolves.toEqual('-2');
+    await expect(redis.hget('_tollbooth:limit', 't1')).resolves.toEqual('11');
+    await expect(redis.hget('_tollbooth:limit', 't2')).resolves.toEqual('0');
+    await expect(redis.hget('_tollbooth:limit', 't3')).resolves.toEqual('-2');
   });
 
   test('getTokenLimit returns limit', async () => {
@@ -36,18 +36,18 @@ describe('admin tools', () => {
       { token: 'r3', limit: 12 },
     ]);
 
-    await expect(redis.hkeys('_fact:limit')).resolves.toEqual(['r1', 'r2', 'r3']);
+    await expect(redis.hkeys('_tollbooth:limit')).resolves.toEqual(['r1', 'r2', 'r3']);
 
     await removeTokens(redis, ['r1', 'r2']);
 
-    await expect(redis.hkeys('_fact:limit')).resolves.toEqual(['r3']);
+    await expect(redis.hkeys('_tollbooth:limit')).resolves.toEqual(['r3']);
   });
 
   test('evict removes only its own keys', async () => {
     await redis.set('foo', 'bar');
 
     await setTokensLimits(redis, [{ token: 'r1', limit: 10 }]);
-    await redis.set('_fact:throttle:token', 5);
+    await redis.set('_tollbooth:throttle:token', 5);
 
     await evict(redis);
 

@@ -10,20 +10,20 @@ export async function setTokensLimits(redis: Redis, tokens: TokenLimit[]) {
     (res, { token, limit }) => [...res, token, limit],
     <(string | number)[]>[],
   );
-  await redis.hset('_fact:limit', ...args);
+  await redis.hset('_tollbooth:limit', ...args);
 }
 
 export async function removeTokens(redis: Redis, tokens: string[]) {
-  await redis.hdel('_fact:limit', ...tokens);
+  await redis.hdel('_tollbooth:limit', ...tokens);
 }
 
 export async function getTokenLimit(redis: Redis, token: string) {
-  const res = (await redis.hget('_fact:limit', token)) || '0';
+  const res = (await redis.hget('_tollbooth:limit', token)) || '0';
   return parseInt(res);
 }
 
 export async function evict(redis: Redis) {
-  const keys = await redis.keys('_fact:*');
+  const keys = await redis.keys('_tollbooth:*');
   if (!keys.length) {
     return;
   }
