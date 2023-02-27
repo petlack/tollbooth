@@ -6,6 +6,10 @@ const config: Config.InitialOptions = {
     '^.+\\.ts$': 'ts-jest',
   },
   modulePathIgnorePatterns: ['<rootDir>/dist/'],
+  coverageReporters: [
+    'json-summary',
+    'lcov',
+  ]
 };
 
 export default config;
