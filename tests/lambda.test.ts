@@ -32,12 +32,12 @@ const protect = Tollbooth({
 
 const protectedRequest = (
   client?: string,
-  clientHeaderName: string = 'x-api-key',
+  tokenHeaderName: string = 'x-api-key',
 ): AwsEventArgs => ({
   path: '/foo',
   method: 'GET',
   host: 'example.com',
-  ...(client ? { headers: { [clientHeaderName]: client } } : {}),
+  ...(client ? { headers: { [tokenHeaderName]: client } } : {}),
 });
 
 const systemKeys = ['_tollbooth:limit'];
@@ -70,7 +70,7 @@ describe('token', () => {
     const protect = Tollbooth({
       redis,
       routes: [{ path: '/foo', method: 'get' }],
-      clientHeaderName: 'x-custom',
+      tokenHeaderName: 'x-custom',
     });
 
     const handler = okHandler({ status: 'ok' });

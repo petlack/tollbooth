@@ -5,12 +5,12 @@ import { TollboothCode, TollboothArgs, TollboothError } from './types';
 type ExpressErrorHandler = (res: Response, error: TollboothError) => void;
 
 export type ExpressTollboothArgs = TollboothArgs & {
-  clientHeaderName?: string;
+  tokenHeaderName?: string;
   errorHandler?: ExpressErrorHandler;
 };
 
 export default function ExpressTollbooth({
-  clientHeaderName = 'x-api-key',
+  tokenHeaderName = 'x-api-key',
   errorHandler,
   ...args
 }: ExpressTollboothArgs) {
@@ -32,7 +32,7 @@ export default function ExpressTollbooth({
     const path = req.url;
     const method = req.method.toLowerCase();
     const headers = req.headers;
-    const headerClient = clientHeaderName && headers[clientHeaderName];
+    const headerClient = tokenHeaderName && headers[tokenHeaderName];
     const token = headerClient && [...headerClient].join('');
 
     const result = await protect({ path, token, method });

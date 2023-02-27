@@ -22,12 +22,12 @@ type AwsHandler = (
 type LambdaErrorHandler = (callback: APIGatewayProxyCallback, error: TollboothError) => void;
 
 export type LambdaTollboothArgs = TollboothArgs & {
-  clientHeaderName?: string;
+  tokenHeaderName?: string;
   errorHandler?: LambdaErrorHandler;
 };
 
 export default function ({
-  clientHeaderName = 'x-api-key',
+  tokenHeaderName = 'x-api-key',
   errorHandler,
   ...args
 }: LambdaTollboothArgs) {
@@ -48,7 +48,7 @@ export default function ({
       context: Context,
       callback: APIGatewayProxyCallback,
     ) {
-      const token = (clientHeaderName && event.headers[clientHeaderName]) || undefined;
+      const token = (tokenHeaderName && event.headers[tokenHeaderName]) || undefined;
       const method = event.httpMethod.toLowerCase();
       const path = event.path;
 

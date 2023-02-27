@@ -149,7 +149,7 @@ console.log('Result', success);
 - `routes`: List of protected routes
   - `path`: Relative path, e.g. `/foo`, or `*` to protect all paths with given method.
   - `method`: One of `get`, `head`, `post`, `put`, `patch`, `delete`, `options`
-- `clientHeaderName`: _(Only for Express and AWS Lambda)_ Name of the header containing token. Default `x-api-key`
+- `tokenHeaderName`: _(Only for Express and AWS Lambda)_ Name of the header containing token. Default `x-api-key`
 - `errorHandler`: _(Only for Express and AWS Lambda)_ Custom error handler function with signature `(res: express.Response | APIGatewayProxyCallback, error: tollbooth.TollboothError) => void`
 - `allowAnonymous`: _(Optional)_ If set to `true`, allows access without token. Default: `false`
 - `debug`: _(Optional)_ If set to `true`, will enable console logging. Default: `false`

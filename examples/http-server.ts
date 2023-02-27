@@ -16,8 +16,8 @@ const requestListener = async function (req: IncomingMessage, res: ServerRespons
   const path = req.url;
   const method = req.method && req.method.toLowerCase();
   const headers = req.headers;
-  const clientHeaderName = 'x-api-token';
-  const headerClient = clientHeaderName && headers[clientHeaderName];
+  const tokenHeaderName = 'x-api-token';
+  const headerClient = tokenHeaderName && headers[tokenHeaderName];
   const token = headerClient && [...headerClient].join('');
 
   if (!path || !method) {

@@ -11,7 +11,7 @@ afterAll(() => redis.quit());
 
 const systemKeys = ['_tollbooth:limit'];
 
-function createApp({ clientHeaderName }: { clientHeaderName?: string } = {}) {
+function createApp({ tokenHeaderName }: { tokenHeaderName?: string } = {}) {
   const app = express();
   app.use(express.json());
   app.use(
@@ -19,7 +19,7 @@ function createApp({ clientHeaderName }: { clientHeaderName?: string } = {}) {
       redis,
       routes: [{ path: '/foo', method: 'get' }],
       allowAnonymous: false,
-      clientHeaderName,
+      tokenHeaderName,
     }),
   );
 
@@ -46,7 +46,7 @@ describe('token', () => {
   });
 
   test('uses custom header name', async () => {
-    const app = createApp({ clientHeaderName: 'x-custom' });
+    const app = createApp({ tokenHeaderName: 'x-custom' });
     const expected = { data: { status: 'ok' }, errors: null };
 
     await request(app).get('/foo').set('x-custom', 'ClientToken').expect(200, expected);
