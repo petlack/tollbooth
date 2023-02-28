@@ -23,6 +23,8 @@
 </span></span><span class=line><span class=cl><span class=c1>// set tokens limits
 </span></span></span><span class=line><span class=cl><span class=c1>// e.g. post request to create new account, cron job refreshing limits monthly
 </span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>await</span> <span class=nx>setTokensLimits</span><span class=p>(</span><span class=nx>redis</span><span class=p>,</span> <span class=p>[{</span> <span class=nx>token</span><span class=o>:</span> <span class=s1>&#39;my_token&#39;</span><span class=p>,</span> <span class=nx>limit</span>: <span class=kt>1_000</span> <span class=p>}]);</span>
+</span></span><span class=line><span class=cl><span class=c1>// token with no limit
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>await</span> <span class=nx>setTokensLimits</span><span class=p>(</span><span class=nx>redis</span><span class=p>,</span> <span class=p>[{</span> <span class=nx>token</span><span class=o>:</span> <span class=s1>&#39;my_token&#39;</span><span class=p>,</span> <span class=nx>limit</span><span class=o>:</span> <span class=o>-</span><span class=mi>1</span> <span class=p>}]);</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=c1>// get token limit
 </span></span></span><span class=line><span class=cl><span class=c1>// e.g. in user dashboard
