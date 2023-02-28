@@ -1,4 +1,4 @@
-import { codeToResponse, getCode, getMessage, indexRoutes, logEvent, noop } from './utils';
+import { codeToResponse, redisToCode, getMessage, indexRoutes, logEvent, noop } from './utils';
 
 import { TollboothCode } from './types';
 import type { ProtectArgs, TollboothArgs, ProtectResponse } from './types';
@@ -17,6 +17,10 @@ const TOLLBOOTH_SCRIPT = `
   end
 
   current_limit = tonumber(current_limit)
+
+  if current_limit == -1 then
+    return 1
+  end
 
   if current_limit <= 0 then
     return ${TollboothCode.LimitReached}
@@ -94,7 +98,7 @@ export default function Tollbooth({
         throttleEnabled ? throttleInterval : -1,
         throttleEnabled ? throttleLimit : -1,
       );
-      code = getCode(res);
+      code = redisToCode(res);
     } catch (e: any) {
       log({ ...args, msg: getMessage(e) });
       if (failOnExceptions) {
