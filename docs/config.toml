@@ -1,4 +1,4 @@
-baseURL = 'http://example.org/'
+baseURL = 'https://petlack.github.io/tollbooth/'
 languageCode = 'en-us'
 title = 'Tollbooth'
 markup.highlight.noClasses=false
