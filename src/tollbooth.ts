@@ -98,11 +98,20 @@ export default function Tollbooth({
         throttleEnabled ? throttleInterval : -1,
         throttleEnabled ? throttleLimit : -1,
       );
-      code = redisToCode(res);
-    } catch (e: any) {
-      log({ ...args, msg: getMessage(e) });
+      if (typeof res === 'string' || res instanceof String) {
+        code = redisToCode(<string>res);
+      }
+      else if (typeof res === 'number') {
+        code = redisToCode(res.toString());
+      }
+      else {
+        code = TollboothCode.RedisError;
+      }
+    } catch (e: unknown) {
+      const err = <{ message?: string }>e;
+      log({ ...args, msg: getMessage(err) });
       if (failOnExceptions) {
-        info = e.message;
+        info = err.message;
         code = TollboothCode.RedisError;
       } else {
         code = TollboothCode.Ok;
@@ -110,10 +119,12 @@ export default function Tollbooth({
     }
 
     switch (code) {
-      case TollboothCode.TooManyRequests:
-        log({ ...args, msg: 'too many requests' });
-      case TollboothCode.LimitReached:
-        log({ ...args, msg: 'limit reached' });
+    case TollboothCode.TooManyRequests:
+      log({ ...args, msg: 'too many requests' });
+      break;
+    case TollboothCode.LimitReached:
+      log({ ...args, msg: 'limit reached' });
+      break;
     }
 
     return codeToResponse(code, info);

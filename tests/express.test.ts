@@ -2,6 +2,7 @@ import request from 'supertest';
 
 import Redis from 'ioredis';
 import express from 'express';
+
 import Tollbooth from '../src/express';
 import { setTokensLimits, evict } from '../src/admin';
 
@@ -16,9 +17,9 @@ function createApp({ tokenHeaderName }: { tokenHeaderName?: string } = {}) {
   app.use(express.json());
   app.use(
     Tollbooth({
-      redis,
-      routes: [{ path: '/foo', method: 'get' }],
       allowAnonymous: false,
+      redis,
+      routes: [{ method: 'get', path: '/foo' }],
       tokenHeaderName,
     }),
   );
@@ -31,7 +32,7 @@ function createApp({ tokenHeaderName }: { tokenHeaderName?: string } = {}) {
 
 describe('token', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setTokensLimits(redis, [{ limit: 5, token: 'ClientToken' }]);
   });
 
   afterEach(async () => {
@@ -60,7 +61,7 @@ describe('error handler', () => {
     app.use(
       Tollbooth({
         redis,
-        routes: [{ path: '/foo', method: 'get' }],
+        routes: [{ method: 'get', path: '/foo' }],
         errorHandler: (res, error) => {
           res.status(error.statusCode).json({ error: error.message });
         },
@@ -77,7 +78,7 @@ describe('responses', () => {
   const app = createApp();
 
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setTokensLimits(redis, [{ limit: 5, token: 'ClientToken' }]);
   });
 
   afterEach(async () => {

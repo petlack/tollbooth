@@ -1,14 +1,14 @@
 import { TollboothCode } from './types';
 import type { IndexedRoutes, Route, ProtectArgs, ProtectResponse } from './types';
 
-export function getMessage(e: any, def = 'Unknown Error') {
+export function getMessage(e: { message?: string }, def = 'Unknown Error') {
   if (e instanceof Error) {
     return e.message;
   }
   return (e && e.message) || def;
 }
 
-export function getStatusCode(e: any, def = 500) {
+export function getStatusCode(e: { statusCode?: number }, def = 500) {
   return (e && e.statusCode) || def;
 }
 
@@ -19,7 +19,7 @@ export function codeToName(code: TollboothCode): string {
   return name || 'Unknown';
 }
 
-export function redisToCode(res: any): TollboothCode {
+export function redisToCode(res: string | null): TollboothCode {
   if (res == null) {
     return TollboothCode.RedisError;
   }
@@ -35,28 +35,28 @@ export function redisToCode(res: any): TollboothCode {
 
 export function codeToStatus(code: TollboothCode): number {
   switch (code) {
-    case TollboothCode.TooManyRequests:
-      return 429;
-    case TollboothCode.Unauthorized:
-      return 401;
-    case TollboothCode.LimitReached:
-      return 429;
-    case TollboothCode.RedisError:
-      return 500;
-    case TollboothCode.Ok:
-      return 200;
+  case TollboothCode.TooManyRequests:
+    return 429;
+  case TollboothCode.Unauthorized:
+    return 401;
+  case TollboothCode.LimitReached:
+    return 429;
+  case TollboothCode.RedisError:
+    return 500;
+  case TollboothCode.Ok:
+    return 200;
   }
 }
 
-export function filterNil(obj: any): any {
+export function filterNil<T extends {[k: string]: string | number | null}>(obj: T): T {
   return Object.entries(obj).reduce(
-    (res: any, [k, v]: [k: any, v: any]) => ({ ...res, ...(v == null ? {} : { [k]: v }) }),
-    {},
+    (res, [k, v]) => ({ ...res, ...(v == null ? {} : { [k]: v }) }),
+    <T>{},
   );
 }
 
-export function codeToResponse(code: TollboothCode, info?: any): ProtectResponse {
-  return filterNil({ code, message: codeToName(code), statusCode: codeToStatus(code), info });
+export function codeToResponse(code: TollboothCode, info?: string | null): ProtectResponse {
+  return filterNil<ProtectResponse>({ code, message: codeToName(code), statusCode: codeToStatus(code), info });
 }
 
 export function indexRoutes(paths: Route[]): IndexedRoutes {
@@ -69,6 +69,7 @@ export function indexRoutes(paths: Route[]): IndexedRoutes {
   }, new Map());
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export function noop() {}
 
 type LogArgs = ProtectArgs & {

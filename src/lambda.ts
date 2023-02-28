@@ -4,7 +4,7 @@ import Tollbooth from './tollbooth';
 import { TollboothArgs, TollboothCode, TollboothError } from './types';
 import { getMessage, getStatusCode } from './utils';
 
-function fail(error: any) {
+function fail(error: { message?: string, statusCode?: number }) {
   const body = {
     errors: [{ message: getMessage(error) }],
     data: null,
@@ -59,8 +59,9 @@ export default function ({
           return;
         }
         await handler(event, context, callback);
-      } catch (e: any) {
-        handleError(callback, e);
+      } catch (e: unknown) {
+        const err = <{ message: string, statusCode: number }>e;
+        handleError(callback, err);
       }
     };
   };

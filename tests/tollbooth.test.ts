@@ -2,24 +2,21 @@ import Redis from 'ioredis';
 import { getTokenLimit, setTokensLimits, evict } from '../src/admin';
 
 import Tollbooth from '../src/tollbooth';
-import { TollboothCode } from '../src/types';
+import { RedisEval, TollboothCode } from '../src/types';
 
 const redis = new Redis('redis://localhost:6379');
 
 afterAll(() => redis.quit());
 
-// @ts-ignore
-const failingRedis: Redis = {
+const failingRedis: RedisEval = {
   eval() {
     throw new Error('Redis mock error');
   },
 };
 
-// @ts-ignore
-function customResponseRedis(response: any): Redis {
-  // @ts-ignore
+function customResponseRedis(response: number | null): RedisEval {
   return {
-    eval() {
+    async eval() {
       return response;
     },
   };

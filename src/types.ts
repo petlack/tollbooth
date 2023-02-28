@@ -10,7 +10,7 @@ export type Route = {
 };
 
 export interface RedisEval {
-  eval: (script: string, keys: number, ...args: any) => Promise<any>;
+  eval: (script: string | Buffer, keys: string | number, ...args: (string | Buffer | number)[]) => Promise<unknown>;
 }
 
 export type TollboothArgs = {
@@ -38,7 +38,7 @@ export type ProtectResponse = {
   code: TollboothCode;
   message: string;
   statusCode: number;
-  info?: string;
+  info?: string | null;
 };
 
 export interface TollboothError {
