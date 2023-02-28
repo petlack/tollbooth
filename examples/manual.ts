@@ -37,6 +37,16 @@ async function run() {
   console.assert(unauthorized.code === TollboothCode.Unauthorized);
   console.log('Result', unauthorized);
 
+  await setTokensLimits(redis, [{ token: 'my_token', limit: -1 }]);
+  const unlimited = await protect({
+    path: '/foo',
+    method: 'get',
+    token: 'my_token',
+  });
+
+  console.assert(unlimited.code === TollboothCode.Ok);
+  console.log('Result', unlimited);
+
   await evict(redis);
 }
 
