@@ -19,7 +19,7 @@ export function codeToName(code: TollboothCode): string {
   return name || 'Unknown';
 }
 
-export function getCode(res: any): TollboothCode {
+export function redisToCode(res: any): TollboothCode {
   if (res == null) {
     return TollboothCode.RedisError;
   }

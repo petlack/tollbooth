@@ -33,10 +33,10 @@ const protect = Tollbooth({
   throttleInterval: 1,
 });
 
-const protectedRequest = (token?: string) => ({
+const protectedRequest = (token?: string, method = 'get') => ({
   path: '/foo',
   token,
-  method: 'get',
+  method,
 });
 
 const notFoundRequest = (token?: string) => ({
@@ -70,6 +70,7 @@ const OK = {
   message: 'Ok',
   statusCode: 200,
 };
+const LIMIT_UNLIMITED = -1;
 
 const systemKeys = ['_tollbooth:limit'];
 
@@ -109,6 +110,21 @@ describe('anonymous access', () => {
     const keys = await redis.keys('*');
     expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:anonymous'].sort());
   });
+
+  test('anonymous request on protected path does not update hits', async () => {
+    await expect(protect(protectedRequest())).resolves.toEqual(UNAUTHORIZED);
+
+    const keys = await redis.keys('*');
+    expect(keys).toEqual(systemKeys);
+  });
+
+  test('anonymous request on unprotected path does not update hits', async () => {
+    await expect(protect(notFoundRequest())).resolves.toEqual(OK);
+
+    const keys = await redis.keys('*');
+    expect(keys).toEqual(systemKeys);
+  });
+
 });
 
 describe('throttle', () => {
@@ -248,31 +264,6 @@ describe('update hits', () => {
     await evict(redis);
   });
 
-  test('anonymous request on protected path does not update hits', async () => {
-    await expect(protect(protectedRequest())).resolves.toEqual(UNAUTHORIZED);
-
-    const keys = await redis.keys('*');
-    expect(keys).toEqual(systemKeys);
-  });
-
-  test('anonymous request on unprotected path does not update hits', async () => {
-    await expect(protect(notFoundRequest())).resolves.toEqual(OK);
-
-    const keys = await redis.keys('*');
-    expect(keys).toEqual(systemKeys);
-  });
-
-  test('protected path with different hostname updates hits', async () => {
-    await protect({
-      path: '/foo',
-      token: 'ClientToken',
-      method: 'get',
-    });
-
-    const keys = await redis.keys('*');
-    expect(keys.sort()).toEqual([...systemKeys, '_tollbooth:throttle:ClientToken'].sort());
-  });
-
   test('protected path updates hits', async () => {
     await protect(protectedRequest('ClientToken'));
 
@@ -298,9 +289,13 @@ describe('protect all paths', () => {
     routes: [{ path: '*', method: 'get' }],
   });
 
-  test('request to all routes is protected', async () => {
+  test('request to all get routes is protected', async () => {
     await setTokensLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
     await expect(protectAll(notFoundRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
+  });
+
+  test('request to post route is not protected', async () => {
+    await expect(protectAll(protectedRequest('', 'post'))).resolves.toEqual(OK);
   });
 });
 
@@ -327,6 +322,11 @@ describe('blocking', () => {
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
   });
 
+  test('protected path not blocked when unlimited', async () => {
+    await setTokensLimits(redis, [{ token: 'ClientToken', limit: LIMIT_UNLIMITED }]);
+    await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
+  });
+
   test('protected path updates hits when limit > 0', async () => {
     await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
     await protect(protectedRequest('ClientToken'));
@@ -341,11 +341,11 @@ describe('blocking', () => {
     expect(hits).toBe(0);
   });
 
-  test('protected path does not update hits when limit < 0', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: -1 }]);
-    await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
+  test('protected path does not update hits when unlimited', async () => {
+    await setTokensLimits(redis, [{ token: 'ClientToken', limit: LIMIT_UNLIMITED }]);
+    await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
     const hits = await getTokenLimit(redis, 'ClientToken');
-    expect(hits).toBe(-1);
+    expect(hits).toBe(LIMIT_UNLIMITED);
   });
 
   test('unprotected path not blocked when limit == 0', async () => {

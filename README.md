@@ -64,6 +64,8 @@ import { setTokensLimits, getTokenLimit, removeTokens } from 'tollbooth';
 // set tokens limits
 // e.g. post request to create new account, cron job refreshing limits monthly
 await setTokensLimits(redis, [{ token: 'my_token', limit: 1_000 }]);
+// token with no limit
+await setTokensLimits(redis, [{ token: 'my_token', limit: -1 }]);
 
 // get token limit
 // e.g. in user dashboard
