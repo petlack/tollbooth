@@ -105,6 +105,7 @@ export function awsEvent({
 }
 
 export function awsContext(): Context {
+  /* istanbul ignore next */
   return {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     done: () => {},

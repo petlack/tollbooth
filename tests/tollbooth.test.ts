@@ -14,7 +14,7 @@ const failingRedis: RedisEval = {
   },
 };
 
-function customResponseRedis(response: number | null): RedisEval {
+function customResponseRedis(response: number | string | null): RedisEval {
   return {
     async eval() {
       return response;
@@ -214,6 +214,26 @@ describe('exceptions', () => {
     await expect(nullResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(
       REDIS_ERROR,
     );
+  });
+
+  test('when redis returns string, does not fail', async () => {
+    const customResponseProtect = Tollbooth({
+      redis: customResponseRedis('-1'),
+      routes: [{ path: '/foo', method: 'get' }],
+      failOnExceptions: true,
+    });
+
+    await expect(customResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
+  });
+
+  test('when redis returns number, does not fail', async () => {
+    const customResponseProtect = Tollbooth({
+      redis: customResponseRedis(2),
+      routes: [{ path: '/foo', method: 'get' }],
+      failOnExceptions: true,
+    });
+
+    await expect(customResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
   });
 
   test('when redis returns unkown response, fails', async () => {

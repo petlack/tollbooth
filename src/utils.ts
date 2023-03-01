@@ -1,17 +1,6 @@
 import { TollboothCode } from './types';
 import type { IndexedRoutes, Route, ProtectArgs, ProtectResponse } from './types';
 
-export function getMessage(e: { message?: string }, def = 'Unknown Error') {
-  if (e instanceof Error) {
-    return e.message;
-  }
-  return (e && e.message) || def;
-}
-
-export function getStatusCode(e: { statusCode?: number }, def = 500) {
-  return (e && e.statusCode) || def;
-}
-
 export function codeToName(code: TollboothCode): string {
   const name = Object.keys(TollboothCode).find(
     (key: string) => TollboothCode[key as keyof typeof TollboothCode] === code,
@@ -19,10 +8,7 @@ export function codeToName(code: TollboothCode): string {
   return name || 'Unknown';
 }
 
-export function redisToCode(res: string | null): TollboothCode {
-  if (res == null) {
-    return TollboothCode.RedisError;
-  }
+export function redisToCode(res: string): TollboothCode {
   const num = parseInt(res);
   if (num >= 0) {
     return TollboothCode.Ok;
@@ -64,7 +50,10 @@ export function indexRoutes(paths: Route[]): IndexedRoutes {
     if (!res.has(path)) {
       res.set(path, new Map());
     }
-    res.get(path)?.set(method, true);
+    const route = res.get(path);
+    if (route) {
+      route.set(method, true);
+    }
     return res;
   }, new Map());
 }
@@ -81,4 +70,34 @@ export function logEvent({ method, path, token, msg }: LogArgs) {
   console.log(`token=${token} method=${method} path=${path}`);
   console.log(`${msg}`);
   console.log('===================');
+}
+
+function pullAttr<T>(obj: object, name: string) {
+  if (name in obj) {
+    return obj as T;
+  }
+  return <T>{
+    [name]: null,
+  };
+}
+
+export function toError(obj: unknown): { message: string, statusCode: number } {
+  if (typeof obj === 'object' && obj !== null) {
+    const { message: msg } = pullAttr<{ message: string | null }>(obj, 'message');
+    const { statusCode: status } = pullAttr<{ statusCode: number | null }>(obj, 'statusCode');
+    if (msg && status) {
+      return { message: msg, statusCode: status };
+    }
+    if (msg && !status) {
+      return { message: msg, statusCode: 500 };
+    }
+    if (!msg && status) {
+      return { message: status.toString(), statusCode: status };
+    }
+    return { message: `unknown error with keys [${Object.keys(obj).join(' ')}]`, statusCode: 500 };
+  }
+  if (typeof obj === 'string' || typeof obj === 'number' || typeof obj === 'boolean' || obj instanceof Date) {
+    return { message: obj.toString(), statusCode: 500 };
+  }
+  return { message: `unknown error ${obj}`, statusCode: 500 };
 }

@@ -1,4 +1,4 @@
-import { codeToResponse, redisToCode, getMessage, indexRoutes, logEvent, noop } from './utils';
+import { codeToResponse, redisToCode, indexRoutes, logEvent, noop, toError } from './utils';
 
 import { TollboothCode } from './types';
 import type { ProtectArgs, TollboothArgs, ProtectResponse } from './types';
@@ -105,11 +105,12 @@ export default function Tollbooth({
         code = redisToCode(res.toString());
       }
       else {
+        // info = `Unknown response ${res}`;
         code = TollboothCode.RedisError;
       }
     } catch (e: unknown) {
-      const err = <{ message?: string }>e;
-      log({ ...args, msg: getMessage(err) });
+      const err = toError(e);
+      log({ ...args, msg: err.message });
       if (failOnExceptions) {
         info = err.message;
         code = TollboothCode.RedisError;
