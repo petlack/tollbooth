@@ -18,6 +18,10 @@
       "default": "./index.js",
       "types": "./index.d.ts"
     },
+    "./deno": {
+      "default": "./deno.js",
+      "types": "./deno.d.ts"
+    },
     "./express": {
       "default": "./express/index.js",
       "types": "./express/index.d.ts"
