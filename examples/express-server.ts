@@ -1,7 +1,7 @@
 import express from 'express';
 import Redis from 'ioredis';
 import Tollbooth from '../src/express';
-import { setTokensLimits } from '../src';
+import { setLimits } from '../src';
 
 const redis = new Redis('redis://localhost');
 
@@ -24,7 +24,7 @@ app.get('/bar', (_req, res) => {
   res.send({ data: { status: 'foo' }, errors: null });
 });
 
-setTokensLimits(redis, [{ token: 'my_token', limit: 5 }]).then(() => {
+setLimits(redis, [{ token: 'my_token', limit: 5 }]).then(() => {
   app.listen(5005, () => {
     console.log('Listening on port 5005');
   });

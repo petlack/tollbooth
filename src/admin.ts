@@ -5,7 +5,7 @@ type TokenLimit = {
   limit: number;
 };
 
-export async function setTokensLimits(redis: Redis, tokens: TokenLimit[]) {
+export async function setLimits(redis: Redis, tokens: TokenLimit[]) {
   const args = tokens.reduce(
     (res, { token, limit }) => [...res, token, limit],
     <(string | number)[]>[],
@@ -13,11 +13,11 @@ export async function setTokensLimits(redis: Redis, tokens: TokenLimit[]) {
   await redis.hset('_tollbooth:limit', ...args);
 }
 
-export async function removeTokens(redis: Redis, tokens: string[]) {
+export async function removeLimits(redis: Redis, tokens: string[]) {
   await redis.hdel('_tollbooth:limit', ...tokens);
 }
 
-export async function getTokenLimit(redis: Redis, token: string) {
+export async function getLimit(redis: Redis, token: string) {
   const res = (await redis.hget('_tollbooth:limit', token)) || '0';
   return parseInt(res);
 }
