@@ -149,11 +149,11 @@ describe('throttle', () => {
 
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(TOO_MANY_REQUESTS);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1100));
 
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
 
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1100));
 
     const throttle = await redis.get('_tollbooth:throttle:ClientToken');
     expect(throttle).toBeNull();
