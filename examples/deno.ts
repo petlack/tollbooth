@@ -1,8 +1,8 @@
-import { default as Tollbooth, setTokensLimits, TollboothCode } from 'npm:tollbooth@0.2';
-import { RedisFromSendCommand } from 'npm:tollbooth@0.2/deno.js';
+import { default as Tollbooth, setTokensLimits, TollboothCode } from 'npm:tollbooth@0.2.1';
+import { RedisFromSendCommand } from 'npm:tollbooth@0.2.1/deno.js';
 import { sendCommand } from 'https://deno.land/x/r2d2/mod.ts';
 
-const redisConn = await Deno.connect({ host: 'localhost', port: 6379 });
+const redisConn = await Deno.connect({ hostname: 'localhost', port: 6379 });
 
 const redis = RedisFromSendCommand(redisConn, sendCommand);
 

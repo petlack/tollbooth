@@ -9,11 +9,26 @@ export type Route = {
   method: 'get' | 'post' | 'put' | 'patch' | 'options' | 'head' | 'delete';
 };
 
+export type CommandArg = string | number | Buffer;
+
+export type Reply =
+  | null
+  | string
+  | number
+  | boolean
+  | bigint
+  | Buffer
+  | Uint8Array
+  | Uint16Array
+  | Uint32Array
+  | Record<string, unknown>
+  | Reply[];
+
 export interface RedisEval {
   eval: (
     script: string | Buffer,
-    keys: string | number,
-    ...args: (string | Buffer | number)[]
+    numkeys: string | number,
+    ...args: CommandArg[]
   ) => Promise<unknown>;
 }
 
