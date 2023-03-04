@@ -32,7 +32,7 @@ const protect = Tollbooth({
 
 const protectedRequest = (
   client?: string,
-  tokenHeaderName: string = 'x-api-key',
+  tokenHeaderName = 'x-api-key',
 ): AwsEventArgs => ({
   path: '/foo',
   method: 'GET',
@@ -189,7 +189,7 @@ describe('responses', () => {
     const stub = await invokeLambda(protect(handler), protectedRequest('ClientToken'));
 
     expectStatus(stub, 500);
-    expectOneErrorMessage(stub, 'Unknown Error');
+    expectOneErrorMessage(stub, 'unknown error with keys [msg]');
   });
 
   test('GET 500 request when fails with exception', async () => {
@@ -207,7 +207,7 @@ describe('responses', () => {
     const stub = await invokeLambda(protect(handler), protectedRequest('ClientToken'));
 
     expectStatus(stub, 403);
-    expectOneErrorMessage(stub, 'Unknown Error');
+    expectOneErrorMessage(stub, '403');
   });
 
   test('GET 400 request when fails with custom error', async () => {

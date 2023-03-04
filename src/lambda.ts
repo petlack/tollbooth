@@ -2,15 +2,15 @@ import { Context, APIGatewayProxyCallback, APIGatewayEvent } from 'aws-lambda';
 
 import Tollbooth from './tollbooth';
 import { TollboothArgs, TollboothCode, TollboothError } from './types';
-import { getMessage, getStatusCode } from './utils';
+import { toError } from './utils';
 
-function fail(error: any) {
+function fail(error: TollboothError) {
   const body = {
-    errors: [{ message: getMessage(error) }],
+    errors: [{ message: error.message }],
     data: null,
   };
 
-  return { statusCode: getStatusCode(error), body: JSON.stringify(body) };
+  return { statusCode: error.statusCode, body: JSON.stringify(body) };
 }
 
 type AwsHandler = (
@@ -59,8 +59,9 @@ export default function ({
           return;
         }
         await handler(event, context, callback);
-      } catch (e: any) {
-        handleError(callback, e);
+      } catch (e: unknown) {
+        const err = toError(e);
+        handleError(callback, err);
       }
     };
   };

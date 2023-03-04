@@ -1,7 +1,6 @@
-const Redis = require('ioredis');
-const benchmark = require('benchmark');
-const Tollbooth = require('../dist/index').default;
-const { setTokensLimits, evict, TollboothCode } = require('../dist/index');
+import Redis from 'ioredis';
+import benchmark from 'benchmark';
+import Tollbooth, { setTokensLimits, evict, TollboothCode } from '../dist/index';
 
 const redis = new Redis('redis://localhost:6379');
 

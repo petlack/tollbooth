@@ -105,10 +105,14 @@ export function awsEvent({
 }
 
 export function awsContext(): Context {
+  /* istanbul ignore next */
   return {
-    done: (_error?: Error, _result?: any) => {},
-    fail: (_error: string | Error) => {},
-    succeed: (_messageOrObject: any) => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    done: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    fail: () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    succeed: () => {},
     getRemainingTimeInMillis: () => 0,
     callbackWaitsForEmptyEventLoop: true,
     functionVersion: '$LATEST',
@@ -130,7 +134,7 @@ function parse(result: { statusCode: number; body: string }) {
 
 type Stub = jest.Mock<void>;
 
-export function expectOneCall(stub: Stub, expected: any) {
+export function expectOneCall(stub: Stub, expected: unknown) {
   const calls = stub.mock.calls;
   expect(calls).toHaveLength(1);
   const response = calls[0];
@@ -145,14 +149,14 @@ export function expectStatus(stub: Stub, statusCode: number) {
   expect(result['statusCode']).toEqual(statusCode);
 }
 
-export function expectBody(stub: Stub, data: any) {
+export function expectBody(stub: Stub, data: unknown) {
   const calls = stub.mock.calls;
   expect(calls).toHaveLength(1);
   const result = parse(calls[0][1]);
   expect(result['body']).toEqual(data);
 }
 
-export function expectData(stub: Stub, data: any) {
+export function expectData(stub: Stub, data: unknown) {
   const calls = stub.mock.calls;
   expect(calls).toHaveLength(1);
   const result = parse(calls[0][1]);
@@ -180,13 +184,13 @@ type AwsHandler = (
   callback: APIGatewayProxyCallback,
 ) => Promise<void>;
 
-export function failHandler(e: any) {
-  return async function (_event: APIGatewayEvent, _context: Context) {
+export function failHandler(e: unknown) {
+  return async function () {
     throw e;
   };
 }
 
-export function okHandler(data: any) {
+export function okHandler(data: unknown) {
   return async function (
     _event: APIGatewayEvent,
     _context: Context,
@@ -203,7 +207,8 @@ export function okHandler(data: any) {
 }
 
 export async function invokeLambda(handler: AwsHandler, args: AwsEventArgs) {
-  const stub = jest.fn((_e, _r) => {});
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const stub = jest.fn(() => {});
   const context = awsContext();
   const event = awsEvent(args);
   await handler(event, context, stub);
