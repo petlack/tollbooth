@@ -1,11 +1,9 @@
 type Fn<I, O> = (...args: I[]) => O;
 type CmdFn<I, O> = (cmd: string, ...args: I[]) => O;
 
-type CommandArg =
-  | string
-  | number;
+type CommandArg = string | number;
 
-type Reply = 
+type Reply =
   | string
   | number
   | boolean

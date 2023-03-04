@@ -8,19 +8,17 @@ const redis = RedisFromSendCommand('conn', sendCommand);
 
 describe('RedisFromSendCommand', () => {
   it('hget', () => {
-    expect(
-      redis.hget('foo', 'bar')
-    ).toEqual(
-      ['conn', 'HGET', 'foo', 'bar']
-    );
+    expect(redis.hget('foo', 'bar')).toEqual(['conn', 'HGET', 'foo', 'bar']);
   });
 
   it('eval', () => {
-    expect(
-      redis.eval('return KEYS[0] .. ARGV[1]', 1, 'foo', 'bar')
-    ).toEqual(
-      ['conn', 'EVAL', 'return KEYS[0] .. ARGV[1]', 1, 'foo', 'bar']
-    );
+    expect(redis.eval('return KEYS[0] .. ARGV[1]', 1, 'foo', 'bar')).toEqual([
+      'conn',
+      'EVAL',
+      'return KEYS[0] .. ARGV[1]',
+      1,
+      'foo',
+      'bar',
+    ]);
   });
 });
-

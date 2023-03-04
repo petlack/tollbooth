@@ -23,7 +23,9 @@ Tollbooth is a small utility (10kB raw JS) for Node.js, Express & AWS Lambda tha
 ```
 npm add tollbooth
 ```
+
 or
+
 ```
 yarn add tollbooth
 ```
