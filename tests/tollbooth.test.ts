@@ -120,7 +120,6 @@ describe('anonymous access', () => {
     const keys = await redis.keys('*');
     expect(keys).toEqual(systemKeys);
   });
-
 });
 
 describe('throttle', () => {
@@ -222,7 +221,9 @@ describe('exceptions', () => {
       failOnExceptions: true,
     });
 
-    await expect(customResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
+    await expect(customResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(
+      LIMIT_REACHED,
+    );
   });
 
   test('when redis returns number, does not fail', async () => {

@@ -30,10 +30,7 @@ const protect = Tollbooth({
   allowAnonymous: false,
 });
 
-const protectedRequest = (
-  client?: string,
-  tokenHeaderName = 'x-api-key',
-): AwsEventArgs => ({
+const protectedRequest = (client?: string, tokenHeaderName = 'x-api-key'): AwsEventArgs => ({
   path: '/foo',
   method: 'GET',
   host: 'example.com',

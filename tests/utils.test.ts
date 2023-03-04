@@ -22,18 +22,27 @@ describe('toError', () => {
     expect(toError(0)).toEqual({ message: '0', statusCode: 500 });
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     expect(toError(() => {})).toEqual({ message: 'unknown error () => { }', statusCode: 500 });
-    expect(toError(new Promise<void>(resolve => { resolve(); }))).toEqual({ message: 'unknown error with keys []', statusCode: 500 });
+    expect(
+      toError(
+        new Promise<void>((resolve) => {
+          resolve();
+        }),
+      ),
+    ).toEqual({ message: 'unknown error with keys []', statusCode: 500 });
   });
 
   test('missing message', () => {
     expect(toError({ statusCode: 404 })).toEqual({ message: '404', statusCode: 404 });
   });
-  
+
   test('missing status', () => {
     expect(toError({ message: 'error' })).toEqual({ message: 'error', statusCode: 500 });
   });
 
   test('exceptions', () => {
-    expect(toError(new Error('missing token'))).toEqual({ message: 'missing token', statusCode: 500 });
+    expect(toError(new Error('missing token'))).toEqual({
+      message: 'missing token',
+      statusCode: 500,
+    });
   });
 });

@@ -1,18 +1,18 @@
 {
   "name": "tollbooth",
   "version": "0.1.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "Tollbooth is a small utility for Node.js, Express & AWS Lambda that throttles and limits number of requests per client using Redis.",
   "license": "MIT",
-  "author": "petlack",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/petlack/tollbooth"
   },
+  "author": "petlack",
   "homepage": "https://github.com/petlack/tollbooth",
   "bugs": "https://github.com/petlack/tollbooth/issues",
-  "publishConfig": {
-    "access": "public"
-  },
   "exports": {
     ".": {
       "default": "./index.js",
@@ -34,17 +34,17 @@
     "cov:clean": "git restore coverage",
     "format": "prettier --write './**/*.{js,ts,md,json}' --config ./.prettierrc",
     "format:check": "prettier --check .",
-    "security": "npm audit --audit-level=high",
+    "link": "cd dist && npm link",
     "lint": "npm run lint:docs && npm --no-bail run lint:json && npm run lint:package && npm run lint:js",
     "lint:docs": "prettier --write **/*.md",
     "lint:js": "eslint --cache src benchmarks examples tests --ext .js,.ts,.mjs",
     "lint:json": "prettier --write **/tsconfig.json",
     "lint:package": "prettier --write **/package.json",
+    "postbuild": "node config/prepare.js",
     "prebuild": "npm run clean",
     "prepare": "husky install",
-    "postbuild": "node config/prepare.js",
     "publish": "cd dist && npm publish",
-    "link": "cd dist && npm link",
+    "security": "npm audit --audit-level=high",
     "test": "jest --runInBand --coverage",
     "test:watch": "npm run test -- --watch",
     "test:watchAll": "npm run test -- --watchAll"

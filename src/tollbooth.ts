@@ -100,11 +100,9 @@ export default function Tollbooth({
       );
       if (typeof res === 'string' || res instanceof String) {
         code = redisToCode(<string>res);
-      }
-      else if (typeof res === 'number') {
+      } else if (typeof res === 'number') {
         code = redisToCode(res.toString());
-      }
-      else {
+      } else {
         // info = `Unknown response ${res}`;
         code = TollboothCode.RedisError;
       }
@@ -120,12 +118,12 @@ export default function Tollbooth({
     }
 
     switch (code) {
-    case TollboothCode.TooManyRequests:
-      log({ ...args, msg: 'too many requests' });
-      break;
-    case TollboothCode.LimitReached:
-      log({ ...args, msg: 'limit reached' });
-      break;
+      case TollboothCode.TooManyRequests:
+        log({ ...args, msg: 'too many requests' });
+        break;
+      case TollboothCode.LimitReached:
+        log({ ...args, msg: 'limit reached' });
+        break;
     }
 
     return codeToResponse(code, info);
