@@ -1,6 +1,6 @@
 import { codeToResponse, redisToCode, indexRoutes, logEvent, noop, toError } from './utils';
 
-import { TollboothCode } from './types';
+import { TollboothCode, UNLIMITED } from './types';
 import type { ProtectArgs, TollboothArgs, ProtectResponse } from './types';
 
 const TOLLBOOTH_SCRIPT = `
@@ -18,7 +18,7 @@ const TOLLBOOTH_SCRIPT = `
 
   current_limit = tonumber(current_limit)
 
-  if current_limit == -1 then
+  if current_limit == ${UNLIMITED} then
     return 1
   end
 

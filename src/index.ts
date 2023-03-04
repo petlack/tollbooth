@@ -1,4 +1,4 @@
 export { default } from './tollbooth';
-export { TollboothCode } from './types';
+export { TollboothCode, UNLIMITED } from './types';
 export type { TollboothArgs } from './types';
 export * from './admin';

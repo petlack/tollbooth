@@ -45,3 +45,5 @@ export interface TollboothError {
   statusCode: number;
   message: string;
 }
+
+export const UNLIMITED = -1;

@@ -1,7 +1,7 @@
 import Redis from 'ioredis';
 import { getTokenLimit, setTokensLimits, evict } from '../src/admin';
 
-import Tollbooth from '../src/tollbooth';
+import Tollbooth, { UNLIMITED } from '../src';
 import { RedisEval, TollboothCode } from '../src/types';
 
 const redis = new Redis('redis://localhost:6379');
@@ -67,7 +67,6 @@ const OK = {
   message: 'Ok',
   statusCode: 200,
 };
-const LIMIT_UNLIMITED = -1;
 
 const systemKeys = ['_tollbooth:limit'];
 
@@ -340,7 +339,7 @@ describe('blocking', () => {
   });
 
   test('protected path not blocked when unlimited', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: LIMIT_UNLIMITED }]);
+    await setTokensLimits(redis, [{ token: 'ClientToken', limit: UNLIMITED }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
   });
 
@@ -359,10 +358,10 @@ describe('blocking', () => {
   });
 
   test('protected path does not update hits when unlimited', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: LIMIT_UNLIMITED }]);
+    await setTokensLimits(redis, [{ token: 'ClientToken', limit: UNLIMITED }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
     const hits = await getTokenLimit(redis, 'ClientToken');
-    expect(hits).toBe(LIMIT_UNLIMITED);
+    expect(hits).toBe(UNLIMITED);
   });
 
   test('unprotected path not blocked when limit == 0', async () => {
