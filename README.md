@@ -15,6 +15,7 @@ Tollbooth is a small utility (10kB raw JS) for Node.js, Deno, Express & AWS Lamb
 - [Configuration options](#configuration-options)
 - [Admin helpers](#admin-helpers)
 - [Examples](#examples)
+- [Running redis](#running-redis)
 - [Benchmarks](#benchmarks)
 - [Development](#development)
 
@@ -213,6 +214,17 @@ See [examples](examples/) folder.
 - [Manual usage](examples/manual.ts)
 - [Deno](examples/deno.ts)
 - [Deno HTTP server](examples/deno-http-server.ts)
+
+## Running redis
+
+### Running locally
+```bash
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack:latest
+```
+
+### 3rd party services
+
+- [Upstash](https://upstash.com/)
 
 ## Benchmarks
 
