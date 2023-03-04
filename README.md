@@ -28,7 +28,7 @@ npm add tollbooth
 
 1. Checks how many requests does given token still have left.
 2. If the token was not given limit (i.e. [setClientsLimits](#admin-helpers) was not called), rejects the request with **Unauthorized**.
-3. If the token does not have enough requests (i.e. limit <= 0), rejects the request with **LimitReached**.
+3. If the token does not have enough requests (i.e. limit == 0), rejects the request with **LimitReached**.
 4. Checks how many requests did the token make recently.
 5. If the token made more than X requests in the last N seconds (configurable), rejects the request with **TooManyRequests**.
 6. Otherwise, accepts the request with **Ok**.
@@ -59,13 +59,13 @@ By default, the token will be read from **x-api-key** header. See [Configuration
 To manage tokens and limits, you can use [Admin helpers](#admin-helpers).
 
 ```typescript
-import { setTokensLimits, getTokenLimit, removeTokens } from 'tollbooth';
+import { setTokensLimits, getTokenLimit, removeTokens, UNLIMITED } from 'tollbooth';
 
 // set tokens limits
 // e.g. post request to create new account, cron job refreshing limits monthly
 await setTokensLimits(redis, [{ token: 'my_token', limit: 1_000 }]);
 // token with no limit
-await setTokensLimits(redis, [{ token: 'my_token', limit: -1 }]);
+await setTokensLimits(redis, [{ token: 'my_token', limit: UNLIMITED }]);
 
 // get token limit
 // e.g. in user dashboard
@@ -100,7 +100,7 @@ function handle(_event: APIGatewayEvent, _context: Context, callback: APIGateway
 export const handler = protect(handle);
 ```
 
-By default, the token will be read from **x-api-key** header. See [Configuration Options](#configuration-options) for customisation.
+By default, the token will be read from **x-api-key** header. See [Configuration Options](#configuration-options) for options.
 
 ## Manual usage
 
@@ -164,7 +164,7 @@ console.log('Result', success);
 
 ```typescript
 import Redis from 'ioredis';
-import { setTokensLimits, removeTokens, getTokenLimit } from 'tollbooth';
+import { getTokenLimit, removeTokens, setTokensLimits, UNLIMITED } from 'tollbooth';
 
 const redis = Redis('redis://localhost:6379');
 
@@ -172,9 +172,11 @@ const redis = Redis('redis://localhost:6379');
 
 // set token1 with maximum of 1_000 requests
 // set token2 with maximum of 1 request
+// set token3 with unlimited requests
 await setTokensLimits(redis, [
   { token: 'token1', limit: 1_000 },
   { token: 'token2', limit: 1 },
+  { token: 'token3', limit: UNLIMITED },
 );
 
 const currentLimit = await getTokenLimit(redis, 'token1');
