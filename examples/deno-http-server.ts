@@ -1,4 +1,4 @@
-import { serve } from "https://deno.land/std@0.178.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.178.0/http/server.ts';
 import { sendCommand } from 'https://deno.land/x/r2d2/mod.ts';
 import { default as Tollbooth, setTokensLimits, TollboothCode } from 'npm:tollbooth@^0.2';
 import { RedisFromSendCommand } from 'npm:tollbooth@^0.2/deno.js';
@@ -25,16 +25,12 @@ const handler = async (req: Request): Promise<Response> => {
   const response = await protect({ method, path, token });
 
   if (response.code !== TollboothCode.Ok) {
-    return new Response(
-      JSON.stringify({ data: null, errors: [{ message: response.message }] }),
-      { status: response.statusCode },
-    );
+    return new Response(JSON.stringify({ data: null, errors: [{ message: response.message }] }), {
+      status: response.statusCode,
+    });
   }
 
-  return new Response(
-    JSON.stringify({ data: { status: 'ok' }, errors: null }),
-    { status: 200 },
-  );
+  return new Response(JSON.stringify({ data: { status: 'ok' }, errors: null }), { status: 200 });
 };
 
 await setTokensLimits(redis, [{ token: 'my_token', limit: 5 }]);
