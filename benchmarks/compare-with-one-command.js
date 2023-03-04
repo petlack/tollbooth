@@ -1,6 +1,6 @@
 import Redis from 'ioredis';
 import benchmark from 'benchmark';
-import Tollbooth, { setTokensLimits, evict, TollboothCode } from '../dist/index';
+import Tollbooth, { setLimits, evict, TollboothCode } from '../dist/index';
 
 const redis = new Redis('redis://localhost:6379');
 
@@ -68,7 +68,7 @@ async function getNumberOfCalls(redis) {
 
 async function run() {
   try {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 100_000 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 100_000 }]);
 
     let calls = [(await getNumberOfCalls(redis)) - 1];
 

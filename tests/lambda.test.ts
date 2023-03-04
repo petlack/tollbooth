@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { setTokensLimits, evict } from '../src/admin';
+import { setLimits, evict } from '../src/admin';
 
 import Tollbooth from '../src/lambda';
 
@@ -41,7 +41,7 @@ const systemKeys = ['_tollbooth:limit'];
 
 describe('token', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
   });
 
   afterEach(async () => {
@@ -104,7 +104,7 @@ describe('error handler', () => {
 
 describe('responses', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
   });
 
   afterEach(async () => {

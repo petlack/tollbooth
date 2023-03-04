@@ -33,7 +33,7 @@ yarn add tollbooth
 ## How it works
 
 1. Checks how many requests does given token still have left.
-2. If the token was not given limit (i.e. [setClientsLimits](#admin-helpers) was not called), rejects the request with **Unauthorized**.
+2. If the token was not given limit (i.e. [setLimits](#admin-helpers) was not called), rejects the request with **Unauthorized**.
 3. If the token does not have enough requests (i.e. limit == 0), rejects the request with **LimitReached**.
 4. Checks how many requests did the token make recently.
 5. If the token made more than X requests in the last N seconds (configurable), rejects the request with **TooManyRequests**.
@@ -65,21 +65,21 @@ By default, the token will be read from **x-api-key** header. See [Configuration
 To manage tokens and limits, you can use [Admin helpers](#admin-helpers).
 
 ```typescript
-import { setTokensLimits, getTokenLimit, removeTokens, UNLIMITED } from 'tollbooth';
+import { setLimits, getLimit, removeLimits, UNLIMITED } from 'tollbooth';
 
 // set tokens limits
 // e.g. post request to create new account, cron job refreshing limits monthly
-await setTokensLimits(redis, [{ token: 'my_token', limit: 1_000 }]);
+await setLimits(redis, [{ token: 'my_token', limit: 1_000 }]);
 // token with no limit
-await setTokensLimits(redis, [{ token: 'my_token', limit: UNLIMITED }]);
+await setLimits(redis, [{ token: 'my_token', limit: UNLIMITED }]);
 
 // get token limit
 // e.g. in user dashboard
-const limit: number = await getTokenLimit(redis, 'my_token');
+const limit: number = await getLimit(redis, 'my_token');
 
 // remove tokens
 // e.g. on account termination
-await removeTokens(redis, ['my_token']);
+await removeLimits(redis, ['my_token']);
 ```
 
 ## Usage with AWS Lambda
@@ -111,7 +111,7 @@ By default, the token will be read from **x-api-key** header. See [Configuration
 ## Manual usage
 
 ```typescript
-import Tollbooth, { TollboothCode, setTokensLimits } from 'tollbooth';
+import Tollbooth, { TollboothCode, setLimits } from 'tollbooth';
 import Redis from 'ioredis';
 
 const redis = new Redis('redis://localhost:6379');
@@ -121,7 +121,7 @@ const protect = Tollbooth({
 });
 
 // ... application logic
-await setTokensLimits(redis, [{ token: 'my_token', limit: 5 }]);
+await setLimits(redis, [{ token: 'my_token', limit: 5 }]);
 
 const success = await protect({
   path: '/foo',
@@ -170,7 +170,7 @@ console.log('Result', success);
 
 ```typescript
 import Redis from 'ioredis';
-import { getTokenLimit, removeTokens, setTokensLimits, UNLIMITED } from 'tollbooth';
+import { getLimit, removeLimits, setLimits, UNLIMITED } from 'tollbooth';
 
 const redis = Redis('redis://localhost:6379');
 
@@ -179,20 +179,20 @@ const redis = Redis('redis://localhost:6379');
 // set token1 with maximum of 1_000 requests
 // set token2 with maximum of 1 request
 // set token3 with unlimited requests
-await setTokensLimits(redis, [
+await setLimits(redis, [
   { token: 'token1', limit: 1_000 },
   { token: 'token2', limit: 1 },
   { token: 'token3', limit: UNLIMITED },
 );
 
-const currentLimit = await getTokenLimit(redis, 'token1');
+const currentLimit = await getLimit(redis, 'token1');
 console.log({ currentLimit });
 // { currentLimit: 1000 }
 
 // removes token1
-await removeTokens(redis, ['token1']);
+await removeLimits(redis, ['token1']);
 
-const newLimit = await getTokenLimit(redis, 'token1');
+const newLimit = await getLimit(redis, 'token1');
 console.log({ newLimit });
 // { newLimit: 0 }
 
