@@ -29,7 +29,7 @@ export interface RedisEval {
     script: string | Buffer,
     numkeys: string | number,
     ...args: CommandArg[]
-  ) => Promise<unknown>;
+  ) => Promise<unknown | Reply>;
 }
 
 export type TollboothArgs = {
