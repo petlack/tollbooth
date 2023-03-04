@@ -1,5 +1,5 @@
 import Redis from 'ioredis';
-import { getTokenLimit, setTokensLimits, evict } from '../src/admin';
+import { getLimit, setLimits, evict } from '../src/admin';
 
 import Tollbooth, { UNLIMITED } from '../src';
 import { RedisEval, TollboothCode } from '../src/types';
@@ -88,8 +88,8 @@ describe('anonymous access', () => {
   });
 
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
-    await setTokensLimits(redis, [{ token: 'anonymous', limit: 1 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'anonymous', limit: 1 }]);
   });
 
   afterEach(async () => {
@@ -124,7 +124,7 @@ describe('anonymous access', () => {
 
 describe('throttle', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 15 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 15 }]);
   });
 
   afterEach(async () => {
@@ -274,7 +274,7 @@ describe('exceptions', () => {
 
 describe('update hits', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
   });
 
   afterEach(async () => {
@@ -307,7 +307,7 @@ describe('protect all paths', () => {
   });
 
   test('request to all get routes is protected', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
     await expect(protectAll(notFoundRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
   });
 
@@ -318,7 +318,7 @@ describe('protect all paths', () => {
 
 describe('blocking', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
   });
 
   afterEach(async () => {
@@ -330,43 +330,43 @@ describe('blocking', () => {
   });
 
   test('protected path blocked when limit == 0', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
   });
 
   test('protected path not blocked when limit > 0', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
   });
 
   test('protected path not blocked when unlimited', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: UNLIMITED }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: UNLIMITED }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
   });
 
   test('protected path updates hits when limit > 0', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
     await protect(protectedRequest('ClientToken'));
-    const hits = await getTokenLimit(redis, 'ClientToken');
+    const hits = await getLimit(redis, 'ClientToken');
     expect(hits).toBe(4);
   });
 
   test('protected path does not update hits when limit == 0', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(LIMIT_REACHED);
-    const hits = await getTokenLimit(redis, 'ClientToken');
+    const hits = await getLimit(redis, 'ClientToken');
     expect(hits).toBe(0);
   });
 
   test('protected path does not update hits when unlimited', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: UNLIMITED }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: UNLIMITED }]);
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
-    const hits = await getTokenLimit(redis, 'ClientToken');
+    const hits = await getLimit(redis, 'ClientToken');
     expect(hits).toBe(UNLIMITED);
   });
 
   test('unprotected path not blocked when limit == 0', async () => {
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 0 }]);
     await expect(protect(notFoundRequest('ClientToken'))).resolves.toEqual(OK);
   });
 });
@@ -385,7 +385,7 @@ describe('logging', () => {
       debug: true,
     });
 
-    await setTokensLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
+    await setLimits(redis, [{ token: 'ClientToken', limit: 5 }]);
 
     await expect(protect(protectedRequest('ClientToken'))).resolves.toEqual(OK);
 

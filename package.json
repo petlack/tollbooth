@@ -86,7 +86,8 @@
   },
   "lint-staged": {
     "*.{ts,js}": [
-      "eslint --cache --fix"
+      "eslint --cache --fix",
+      "prettier --write"
     ],
     "**/(package|tsconfig(.*)?).json": [
       "prettier --write"

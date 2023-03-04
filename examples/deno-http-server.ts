@@ -1,6 +1,6 @@
 import { serve } from 'https://deno.land/std@0.178.0/http/server.ts';
 import { sendCommand } from 'https://deno.land/x/r2d2/mod.ts';
-import { default as Tollbooth, setTokensLimits, TollboothCode } from 'npm:tollbooth@^0.2';
+import { default as Tollbooth, setLimits, TollboothCode } from 'npm:tollbooth@^0.2';
 import { RedisFromSendCommand } from 'npm:tollbooth@^0.2/deno.js';
 
 const redisConn = await Deno.connect({ hostname: 'localhost', port: 6379 });
@@ -33,6 +33,6 @@ const handler = async (req: Request): Promise<Response> => {
   return new Response(JSON.stringify({ data: { status: 'ok' }, errors: null }), { status: 200 });
 };
 
-await setTokensLimits(redis, [{ token: 'my_token', limit: 5 }]);
+await setLimits(redis, [{ token: 'my_token', limit: 5 }]);
 
 await serve(handler, { port });

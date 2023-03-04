@@ -4,7 +4,7 @@ import Redis from 'ioredis';
 import express from 'express';
 
 import Tollbooth from '../src/express';
-import { setTokensLimits, evict } from '../src/admin';
+import { setLimits, evict } from '../src/admin';
 
 const redis = new Redis('redis://localhost:6379');
 
@@ -32,7 +32,7 @@ function createApp({ tokenHeaderName }: { tokenHeaderName?: string } = {}) {
 
 describe('token', () => {
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ limit: 5, token: 'ClientToken' }]);
+    await setLimits(redis, [{ limit: 5, token: 'ClientToken' }]);
   });
 
   afterEach(async () => {
@@ -78,7 +78,7 @@ describe('responses', () => {
   const app = createApp();
 
   beforeEach(async () => {
-    await setTokensLimits(redis, [{ limit: 5, token: 'ClientToken' }]);
+    await setLimits(redis, [{ limit: 5, token: 'ClientToken' }]);
   });
 
   afterEach(async () => {
