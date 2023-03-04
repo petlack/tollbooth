@@ -42,7 +42,6 @@
     "lint:package": "prettier --write **/package.json",
     "prebuild": "npm run clean",
     "prepare": "husky install",
-    "pretest": "npm run build",
     "postbuild": "node config/prepare.js",
     "publish": "cd dist && npm publish",
     "link": "cd dist && npm link",
