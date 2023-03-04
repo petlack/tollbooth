@@ -1,10 +1,5 @@
 {
   "compilerOptions": {
-    // "skipLibCheck": true,
-    // "moduleResolution": "node",
-    // "resolveJsonModule": true,
-    // "esModuleInterop": true,
-
     "target": "es6",
     "strict": true,
     "preserveConstEnums": true,
