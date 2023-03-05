@@ -173,7 +173,7 @@ console.log('Result', success);
 import Redis from 'ioredis';
 import { getLimit, removeLimits, setLimits, UNLIMITED } from 'tollbooth';
 
-const redis = Redis('redis://localhost:6379');
+const redis = new Redis('redis://localhost:6379');
 
 // ... application logic
 
