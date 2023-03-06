@@ -209,9 +209,10 @@ describe('exceptions', () => {
       failOnExceptions: true,
     });
 
-    await expect(nullResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(
-      REDIS_ERROR,
-    );
+    await expect(nullResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual({
+      ...REDIS_ERROR,
+      info: 'Invalid response',
+    });
   });
 
   test('when redis returns string, does not fail', async () => {
@@ -243,9 +244,10 @@ describe('exceptions', () => {
       failOnExceptions: true,
     });
 
-    await expect(unknownResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual(
-      REDIS_ERROR,
-    );
+    await expect(unknownResponseProtect(protectedRequest('ClientToken'))).resolves.toEqual({
+      ...REDIS_ERROR,
+      info: 'Invalid response',
+    });
   });
 
   test('when failOnExceptions is true, fails on error', async () => {
