@@ -5,7 +5,14 @@
 [![npm version](https://img.shields.io/npm/v/tollbooth.svg)](https://www.npmjs.com/package/tollbooth)
 ![coverage](https://raw.githubusercontent.com/petlack/tollbooth/gh-pages/badge-coverage.svg)
 
-Tollbooth is a small utility (10kB raw JS) for Node.js, Deno, Express & AWS Lambda that throttles and limits number of requests per client using Redis. [Examples](/examples)
+Tollbooth is a small utility (10kB raw JS) for Node.js, Deno, Express & AWS Lambda that throttles and limits number of requests per client using Redis.
+
+- TypeScript, Node, Deno
+- Express middleware
+- AWS Lambda HOF
+- [Examples](/examples)
+
+### Contents
 
 - [Install](#install)
 - [How it works](#how-it-works)
