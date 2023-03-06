@@ -102,8 +102,11 @@ export default function Tollbooth({
         code = redisToCode(<string>res);
       } else if (typeof res === 'number') {
         code = redisToCode(res.toString());
+        if (code === TollboothCode.RedisError) {
+          info = 'Invalid response';
+        }
       } else {
-        // info = `Unknown response ${res}`;
+        info = 'Invalid response';
         code = TollboothCode.RedisError;
       }
     } catch (e: unknown) {
