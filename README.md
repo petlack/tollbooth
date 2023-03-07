@@ -1,16 +1,21 @@
-# Tollbooth
+<p align="center">
+  <a href="https://github.com/petlack/tollbooth">
+    <img alt="banner" title="tollbooth" src="https://raw.githubusercontent.com/petlack/tollbooth/dev/docs/static/banner.png">
+  </a>
+</p>
 
 [![Run tests](https://github.com/petlack/tollbooth/actions/workflows/run-tests.yml/badge.svg)](https://github.com/petlack/tollbooth/actions/workflows/run-tests.yml)
 [![CodeQL](https://github.com/petlack/tollbooth/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/petlack/tollbooth/actions/workflows/github-code-scanning/codeql)
 [![npm version](https://img.shields.io/npm/v/tollbooth.svg)](https://www.npmjs.com/package/tollbooth)
 ![coverage](https://raw.githubusercontent.com/petlack/tollbooth/gh-pages/badge-coverage.svg)
 
+## About
+
 Tollbooth is a small utility (10kB raw JS) for Node.js, Deno, Express & AWS Lambda that throttles and limits number of requests per client using Redis.
 
 - TypeScript, Node, Deno
 - Express middleware
 - AWS Lambda HOF
-- [Examples](/examples)
 
 ### Contents
 
