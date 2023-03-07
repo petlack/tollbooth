@@ -1,8 +1,4 @@
-<p align="center">
-  <a href="https://github.com/petlack/tollbooth">
-    <img alt="banner" title="tollbooth" src="https://raw.githubusercontent.com/petlack/tollbooth/dev/docs/static/banner.png">
-  </a>
-</p>
+![Tollbooth](/docs/static/banner.png)
 
 [![Run tests](https://github.com/petlack/tollbooth/actions/workflows/run-tests.yml/badge.svg)](https://github.com/petlack/tollbooth/actions/workflows/run-tests.yml)
 [![CodeQL](https://github.com/petlack/tollbooth/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/petlack/tollbooth/actions/workflows/github-code-scanning/codeql)
