@@ -16,12 +16,12 @@ Tollbooth is a small utility (10kB raw JS) for Node.js, Deno, Express & AWS Lamb
 
 - [Install](#install)
 - [How it works](#how-it-works)
+- [Examples](#examples)
 - [Usage with Express](#usage-with-express)
 - [Usage with AWS Lambda](#usage-with-aws-lambda)
 - [Manual usage](#manual-usage)
 - [Configuration options](#configuration-options)
 - [Admin helpers](#admin-helpers)
-- [Examples](#examples)
 - [Running redis](#running-redis)
 - [Benchmarks](#benchmarks)
 - [Development](#development)
@@ -46,6 +46,17 @@ yarn add tollbooth
 4. Checks how many requests did the token make recently.
 5. If the token made more than X requests in the last N seconds (configurable), rejects the request with **TooManyRequests**.
 6. Otherwise, accepts the request with **Ok**.
+
+## Examples
+
+See [examples](examples/) folder.
+
+- [Express server](examples/express-server.ts)
+- [AWS Lambda handler](examples/aws-lambda-handler.ts)
+- [HTTP server](examples/http-server.ts)
+- [Manual usage](examples/manual.ts)
+- [Deno](examples/deno.ts)
+- [Deno HTTP server](examples/deno-http-server.ts)
 
 ## Usage with Express
 
@@ -210,17 +221,6 @@ await evict(redis);
 
 // ... application logic
 ```
-
-## Examples
-
-See [examples](examples/) folder.
-
-- [Express server](examples/express-server.ts)
-- [AWS Lambda handler](examples/aws-lambda-handler.ts)
-- [HTTP server](examples/http-server.ts)
-- [Manual usage](examples/manual.ts)
-- [Deno](examples/deno.ts)
-- [Deno HTTP server](examples/deno-http-server.ts)
 
 ## Running redis
 
