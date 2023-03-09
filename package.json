@@ -5,6 +5,7 @@
     "access": "public"
   },
   "description": "Tollbooth is a small utility for Node.js, Express & AWS Lambda that throttles and limits number of requests per client using Redis.",
+  "keywords": ["nodejs", "javascript", "redis", "express", "typescript", "aws-lambda", "rate-limiting", "throttle", "deno"],
   "license": "MIT",
   "repository": {
     "type": "git",
