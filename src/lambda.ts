@@ -48,7 +48,7 @@ export default function ({
       context: Context,
       callback: APIGatewayProxyCallback,
     ) {
-      const token = (tokenHeaderName && event.headers[tokenHeaderName]) || undefined;
+      const token = tokenHeaderName ? event.headers?.[tokenHeaderName] : undefined;
       const method = event.httpMethod.toLowerCase();
       const path = event.path;
 
