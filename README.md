@@ -217,7 +217,7 @@ console.log({ newLimit });
 // { newLimit: 0 }
 
 
-// deletes all keys saved in redis
+// deletes Tollbooth keys from redis
 await evict(redis);
 
 // ... application logic
